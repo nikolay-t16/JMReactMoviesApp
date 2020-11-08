@@ -1,0 +1,48 @@
+.CardComponent {
+  width: 454px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 35px;
+}
+
+.CardComponent__article {
+  display: flex;
+}
+
+.CardComponent__article-content {
+  margin: 9px 21px;
+}
+
+.CardComponent__article-content-title {
+  margin-bottom: 4px;
+}
+
+.CardComponent__article-content-date {
+  font-size: 12px;
+  color: #827e7e;
+  margin-bottom: 10px;
+}
+
+.CardComponent__article-content-tags {
+  display: flex;
+  margin-bottom: 7px;
+}
+
+.CardComponent__article-content-tags-item {
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  box-sizing: border-box;
+  border-radius: 2px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+  padding: 0 4px;
+  margin-right: 8px;
+}
+
+.CardComponent__article-content-tags-item:last-child {
+  margin-right: 0;
+}
+
+.CardComponent__article-content-text {
+  font-size: 12px;
+  line-height: 22px;
+}
