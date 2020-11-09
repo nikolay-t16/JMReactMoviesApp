@@ -5,7 +5,14 @@
 }
 
 .CardComponent__article {
-  display: flex;
+  display: grid;
+  grid-template-columns: 183px 1fr;
+}
+
+.CardComponent__article-img {
+  width: 183px;
+  height: 281px;
+  background-size: cover;
 }
 
 .CardComponent__article-content {

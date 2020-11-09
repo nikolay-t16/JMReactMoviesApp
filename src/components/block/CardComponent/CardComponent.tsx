@@ -1,29 +1,43 @@
 import React from 'react';
 import { Card } from 'antd';
+import { format } from 'date-fns';
 
 import './CardComponent.css';
+import CardData from './CardData';
+import { subStringWithWords } from '../../../helpers/StringHelper';
 
-export type CardComponentProps = {};
+export type CardComponentProps = { data: CardData };
 
-function CardComponent() {
+function CardComponent(props: CardComponentProps) {
+  const { data } = props;
   const bodyStyle = {
     padding: 0,
   };
+
+  const genres: JSX.Element[] = [];
+  if (data.genres) {
+    const genresCount = data.genres.length <= 3 ? data.genres.length : 3;
+    for (let i = 0; i < genresCount; i++) {
+      const genre = data.genres[i];
+      genres.push(
+        <div key={genre.id} className="CardComponent__article-content-tags-item" title={genre.name}>
+          {subStringWithWords(genre.name, 12)}
+        </div>,
+      );
+    }
+  }
+  const imgStyle = { backgroundImage: `url(https://image.tmdb.org/t/p/w1280/${data.backdrop_path})` };
   return (
     <Card className="CardComponent" bodyStyle={bodyStyle}>
       <article className="CardComponent__article">
-        <img src="Rectangle36.jpg" alt="" />
+        <div className="CardComponent__article-img" style={imgStyle} />
         <div className="CardComponent__article-content">
-          <h2 className="CardComponent__article-content-title">The way back</h2>
-          <div className="CardComponent__article-content-date">March 5, 2020</div>
-          <div className="CardComponent__article-content-tags">
-            <div className="CardComponent__article-content-tags-item">Action</div>
-            <div className="CardComponent__article-content-tags-item">Drama</div>
+          <h2 className="CardComponent__article-content-title">{data.title}</h2>
+          <div className="CardComponent__article-content-date">
+            {format(new Date(data.release_date), 'MMM d, yyyy')}
           </div>
-          <div className="CardComponent__article-content-text">
-            A former basketball all-star, who has lost his wife and family foundation in a struggle with addiction
-            attempts to regain his soul and salvation by becoming the coach of a disparate ethnically mixed high ...
-          </div>
+          {genres.length ? <div className="CardComponent__article-content-tags">{genres}</div> : null}
+          <div className="CardComponent__article-content-text">{subStringWithWords(data.overview, 200)}</div>
         </div>
       </article>
     </Card>
