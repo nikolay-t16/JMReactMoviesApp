@@ -1,15 +1,17 @@
 import React from 'react';
-import { Space } from 'antd';
+import { Spin, Alert } from 'antd';
 
 import './IndexPage.css';
 
-import CardComponent from '../../block/CardComponent/CardComponent';
 import theMovieDB from '../../../helpers/TheMovieDB';
 import CardData from '../../block/CardComponent/CardData';
 import GenreData from '../../block/CardComponent/GenreData';
+import CardsList from '../../layouts/CardsList/CardsList';
 
 export type IndexPageState = {
   items: CardData[];
+  isFetching: boolean;
+  fetchingError: string;
 };
 export type IndexPageProps = {};
 
@@ -19,12 +21,14 @@ class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
   public constructor(props: IndexPageProps) {
     super(props);
     const items: CardData[] = [];
-    this.state = { items };
+    this.state = { items, isFetching: false, fetchingError: '' };
   }
 
   public async componentDidMount() {
     try {
+      await this.setState({ isFetching: true, fetchingError: '' });
       const res = await Promise.all([theMovieDB.fetchMovies('return'), theMovieDB.fetchGeneres()]);
+      await this.setState({ isFetching: false });
       const { genres } = res[1] as { genres: GenreData[] };
       const items = res[0].results;
       items.forEach((item: CardData) => {
@@ -42,19 +46,31 @@ class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
 
       this.setState({ items: res[0].results });
     } catch (error) {
+      this.setState({ fetchingError: 'ERROR!!!', isFetching: false });
       // eslint-disable-next-line no-console
       console.log(error);
     }
   }
 
+  protected get content(): JSX.Element {
+    const { items, isFetching, fetchingError } = this.state;
+    if (fetchingError) {
+      return <Alert message={fetchingError} type="error" />;
+    }
+    if (isFetching) {
+      return (
+        <div className="IndexPage__content-spinner">
+          <Spin />
+        </div>
+      );
+    }
+    return <CardsList items={items} />;
+  }
+
   public render() {
-    const { items } = this.state;
-    const cards = items.map((card) => <CardComponent data={card} key={card.id} />);
     return (
       <div className="IndexPage">
-        <div className="IndexPage__content">
-          <Space className="IndexPage__content-space">{cards.length ? cards : <p>No results</p>}</Space>
-        </div>
+        <div className="IndexPage__content">{this.content}</div>
       </div>
     );
   }
