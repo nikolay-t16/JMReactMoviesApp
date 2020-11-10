@@ -26,11 +26,18 @@ function CardComponent(props: CardComponentProps) {
       );
     }
   }
-  const imgStyle = { backgroundImage: `url(https://image.tmdb.org/t/p/w1280/${data.backdrop_path})` };
+  const imgStyle: any = {};
+  let imgTag: JSX.Element;
+  if (data.backdrop_path) {
+    imgStyle.backgroundImage = `url(https://image.tmdb.org/t/p/w1280/${data.backdrop_path})`;
+    imgTag = <div className="CardComponent__article-img" style={imgStyle} />;
+  } else {
+    imgTag = <div className="CardComponent__article-img">No image</div>;
+  }
   return (
     <Card className="CardComponent" bodyStyle={bodyStyle}>
       <article className="CardComponent__article">
-        <div className="CardComponent__article-img" style={imgStyle} />
+        {imgTag}
         <div className="CardComponent__article-content">
           <h2 className="CardComponent__article-content-title">{data.title}</h2>
           <div className="CardComponent__article-content-date">

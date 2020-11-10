@@ -13,6 +13,10 @@
   width: 183px;
   height: 281px;
   background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .CardComponent__article-content {
