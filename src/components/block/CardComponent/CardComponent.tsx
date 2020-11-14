@@ -14,6 +14,14 @@ function CardComponent(props: CardComponentProps) {
     padding: 0,
   };
 
+  const getFormatDate = () => {
+    try {
+      return format(new Date(data.release_date), 'MMM d, yyyy');
+    } catch {
+      return '';
+    }
+  };
+
   const genres: JSX.Element[] = [];
   if (data.genres) {
     const genresCount = data.genres.length <= 3 ? data.genres.length : 3;
@@ -39,10 +47,14 @@ function CardComponent(props: CardComponentProps) {
       <article className="CardComponent__article">
         {imgTag}
         <div className="CardComponent__article-content">
-          <h2 className="CardComponent__article-content-title">{data.title}</h2>
-          <div className="CardComponent__article-content-date">
-            {format(new Date(data.release_date), 'MMM d, yyyy')}
+          <div className="CardComponent__article-content-header">
+            <h2 className="CardComponent__article-content-header-title" title={data.title}>
+              {subStringWithWords(data.title, 16)}
+            </h2>
+            <div className="CardComponent__article-content-header-reit">{data.vote_average}</div>
           </div>
+
+          <div className="CardComponent__article-content-date">{getFormatDate()}</div>
           {genres.length ? <div className="CardComponent__article-content-tags">{genres}</div> : null}
           <div className="CardComponent__article-content-text">{subStringWithWords(data.overview, 200)}</div>
         </div>

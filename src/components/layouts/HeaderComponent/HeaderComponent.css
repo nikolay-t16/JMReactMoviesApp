@@ -1,0 +1,11 @@
+.HeaderComponent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 32px;
+}
+
+.HeaderComponent__HeaderTabs {
+  margin-bottom: 19px;
+}

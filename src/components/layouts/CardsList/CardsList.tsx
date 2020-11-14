@@ -1,5 +1,4 @@
 import React from 'react';
-import { Space } from 'antd';
 import CardData from '../../block/CardComponent/CardData';
 import CardComponent from '../../block/CardComponent/CardComponent';
 
@@ -10,7 +9,11 @@ type CardsListProps = {
 function CardsList(props: CardsListProps) {
   const { items } = props;
   const cards = items.map((card) => <CardComponent data={card} key={card.id} />);
-  return <Space className="IndexPage__content-space">{cards.length ? cards : <p>No results</p>}</Space>;
+  return (
+    <div style={{ margin: 0 }} className="IndexPage__content-space">
+      {cards.length ? cards : <p>No results</p>}
+    </div>
+  );
 }
 
 export default CardsList;

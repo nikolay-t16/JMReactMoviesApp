@@ -1,6 +1,7 @@
 @import '~normalize.css';
-
-html,
+html {
+  height: auto;
+}
 body,
 .App {
   width: 100%;
