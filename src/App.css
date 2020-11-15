@@ -1,6 +1,6 @@
 @import '~normalize.css';
 html {
-  height: auto;
+  height: stretch;
 }
 body,
 .App {
