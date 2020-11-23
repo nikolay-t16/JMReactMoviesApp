@@ -1,0 +1,39 @@
+.TabComponent-SearchComponent {
+  margin-bottom: 32px;
+}
+
+.TabComponent__content-pagination {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.TabComponent__content-pagination .ant-pagination-item-active {
+  background: #1890ff;
+  border-radius: 4px;
+}
+
+.TabComponent__content-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+.TabComponent__content-pagination .ant-pagination-item {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  text-align: center;
+
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.TabComponent__content-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.TabComponent__content-space {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  display: flex;
+}

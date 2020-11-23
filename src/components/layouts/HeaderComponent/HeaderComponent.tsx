@@ -1,22 +1,30 @@
 import React from 'react';
+import classNames from 'classnames';
 
 import './HeaderComponent.css';
 
-import SearchComponent from '../../block/SearchComponent/SearchComponent';
-import HeaderTabs from '../../block/HeaderTabs/HeaderTabs';
-
 type HeaderComponentProps = {
-  onSearch: (search: string) => void;
+  tab: string;
+  tabs: string[];
+  onChangeTab: (tab: string) => void;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function HeaderComponent(props: HeaderComponentProps) {
-  const { onSearch } = props;
+  const { tab, tabs, onChangeTab } = props;
+  const tabsNodes = tabs.map((tabName) => (
+    <button
+      key={tabName}
+      type="button"
+      onClick={() => onChangeTab(tabName)}
+      className={classNames('HeaderComponent__tabs-item', { 'HeaderComponent__tabs-item-selected': tabName === tab })}
+    >
+      {tabName}
+    </button>
+  ));
   return (
     <header className="HeaderComponent">
-      <div className="HeaderComponent__HeaderTabs">
-        <HeaderTabs />
-      </div>
-      <SearchComponent onSearch={onSearch} />
+      <div className="HeaderComponent__tabs">{tabsNodes}</div>
     </header>
   );
 }

@@ -8,6 +8,7 @@ type CardData = {
   genre_ids: number[];
   genres?: GenreData[];
   id: number;
+  rating: number;
   original_title: string;
   original_language: string;
   title: string;

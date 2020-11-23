@@ -1,124 +1,82 @@
-import React from 'react';
-import { Spin, Alert, Pagination } from 'antd';
-import { DebouncedFunc, debounce } from 'lodash';
-
+import React, { ErrorInfo } from 'react';
+import { Alert } from 'antd';
 import './IndexPage.css';
 
 import theMovieDB from '../../../helpers/TheMovieDB';
-import CardData from '../../block/CardComponent/CardData';
 import GenreData from '../../block/CardComponent/GenreData';
-import CardsList from '../../layouts/CardsList/CardsList';
 import HeaderComponent from '../../layouts/HeaderComponent/HeaderComponent';
+import SearchTab from '../../layouts/SearchTab/SearchTab';
+import RatedTab from '../../layouts/RatedTab/RatedTab';
+import { IndexPageContextProvider } from './IndexPageContext';
 
 export type IndexPageState = {
-  items: CardData[];
-  isFetching: boolean;
   fetchingError: string;
-  search: string;
-  page: number;
-  pages: number;
+  guestSession: string;
+  genres: GenreData[];
+  tab: string;
 };
 export type IndexPageProps = {};
 
 class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
-  public state: IndexPageState;
+  protected readonly TAB_SEARCH = 'search';
 
-  protected debouncedFetchMovies: DebouncedFunc<(search: string, page: number) => Promise<void>>;
+  protected readonly TAB_RATED = 'rated';
 
-  public constructor(props: IndexPageProps) {
-    super(props);
-    const items: CardData[] = [];
-    this.debouncedFetchMovies = debounce((search: string, page: number) => this.fetchMovies(search, page), 500);
+  protected readonly tabs = [this.TAB_SEARCH, this.TAB_RATED];
 
-    this.state = {
-      items,
-      pages: 0,
-      isFetching: false,
-      fetchingError: '',
-      search: 'return',
-      page: 1,
-    };
-  }
+  public state: IndexPageState = {
+    fetchingError: '',
+    guestSession: '',
+    tab: this.TAB_SEARCH,
+    // eslint-disable-next-line react/no-unused-state
+    genres: [],
+  };
 
   public async componentDidMount() {
-    const { search, page } = this.state;
-    await this.fetchMovies(search, page);
-  }
-
-  public onSearch(search: string) {
-    this.setState({ search, page: 1 });
-    this.debouncedFetchMovies(search, 1);
-  }
-
-  public onPageChange(page: number) {
-    const { search } = this.state;
-    this.setState({ page });
-    this.debouncedFetchMovies(search, page);
-  }
-
-  protected get content(): JSX.Element {
-    const { items, isFetching, fetchingError, page, pages } = this.state;
-    if (fetchingError) {
-      return <Alert message={fetchingError} type="error" />;
-    }
-    if (isFetching) {
-      return (
-        <div className="IndexPage__content-spinner">
-          <Spin />
-        </div>
-      );
-    }
-    return (
-      <>
-        <CardsList items={items} />
-        <div className="IndexPage__content-pagination">
-          <Pagination
-            className="IndexPage__content-pagination"
-            size="small"
-            current={page}
-            defaultCurrent={page}
-            total={pages}
-            showSizeChanger={false}
-            onChange={(pageNumber: number) => this.onPageChange(pageNumber)}
-          />
-        </div>
-      </>
-    );
-  }
-
-  protected async fetchMovies(search: string, page: number): Promise<void> {
     try {
-      await this.setState({ isFetching: true, fetchingError: '' });
-      const res = await Promise.all([theMovieDB.fetchMovies(search, page), theMovieDB.fetchGeneres()]);
-      await this.setState({ isFetching: false });
-      const { genres } = res[1] as { genres: GenreData[] };
-      const items = res[0].results;
-      items.forEach((item: CardData) => {
-        item.genre_ids.forEach((genreId) => {
-          const genre = genres.find((genreItem) => genreItem.id === genreId);
-          if (genre) {
-            if (typeof item.genres === 'undefined') {
-              // eslint-disable-next-line no-param-reassign
-              item.genres = [];
-            }
-            item.genres.push(genre);
-          }
-        });
+      const response = await Promise.all([theMovieDB.fetchGuestSession(), theMovieDB.fetchGeneres()]);
+      this.setState({
+        guestSession: response[0].guest_session_id,
+        genres: response[1].genres,
       });
-      this.setState({ items: res[0].results, pages: res[0].total_pages });
     } catch (error) {
-      this.setState({ fetchingError: 'ERROR!!!', isFetching: false });
+      this.setState({ fetchingError: 'ERROR!!!' });
       // eslint-disable-next-line no-console
       console.log(error);
     }
   }
 
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    this.setState({ fetchingError: 'ERROR!!!' });
+    // eslint-disable-next-line no-console
+    console.log(error, errorInfo);
+  }
+
+  protected onChangeTab(tab: string) {
+    this.setState({ tab });
+  }
+
+  protected get content(): JSX.Element {
+    const { fetchingError, tab, guestSession } = this.state;
+    if (fetchingError) {
+      return <Alert message={fetchingError} type="error" />;
+    }
+    if (tab === this.TAB_RATED) {
+      return <RatedTab guestSession={guestSession} />;
+    }
+    return <SearchTab guestSession={guestSession} />;
+  }
+
   public render() {
+    const { tab, genres, guestSession } = this.state;
     return (
       <div className="IndexPage">
         <div className="IndexPage__content">
-          <HeaderComponent onSearch={(search: string) => this.onSearch(search)} />
-          {this.content}
+          <HeaderComponent tab={tab} tabs={this.tabs} onChangeTab={(tabName) => this.onChangeTab(tabName)} />
+          <IndexPageContextProvider genres={genres} guestSession={guestSession}>
+            {this.content}
+          </IndexPageContextProvider>
+          <div style={{ clear: 'both' }} />
         </div>
       </div>
     );

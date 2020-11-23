@@ -4,6 +4,7 @@ import './SearchComponent.css';
 
 type SearchComponentProps = {
   onSearch: (search: string) => void;
+  search: string;
 };
 type SearchComponentState = {
   search: string;
@@ -14,22 +15,24 @@ class SearchComponent extends React.Component<SearchComponentProps, SearchCompon
 
   public constructor(props: SearchComponentProps) {
     super(props);
-    this.state = { search: '' };
+    this.state = { search: props.search };
   }
 
   public onChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { onSearch } = this.props;
-    this.setState({ search: event.target.value });
-    const { search } = this.state;
+    const search = event.target.value;
+    this.setState({ search });
     onSearch(search);
   }
 
   public render() {
+    const { search } = this.state;
     return (
       <input
         className="SearchComponent"
         placeholder="Type to search..."
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.onChange(event)}
+        value={search}
+        onInput={(event: React.ChangeEvent<HTMLInputElement>) => this.onChange(event)}
       />
     );
   }

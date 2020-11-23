@@ -3,9 +3,33 @@
   flex-direction: column;
   align-items: center;
   margin-top: 30px;
-  margin-bottom: 32px;
 }
 
-.HeaderComponent__HeaderTabs {
+.HeaderComponent__tabs {
   margin-bottom: 19px;
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+}
+
+.HeaderComponent__tabs-item {
+  width: 65px;
+  text-align: center;
+  padding-bottom: 12px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  margin-right: 16px;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
+
+.HeaderComponent__tabs-item:last-child {
+  margin-right: 0;
+}
+
+.HeaderComponent__tabs-item-selected,
+.HeaderComponent__tabs-item:hover {
+  color: #1890ff;
+  border-bottom: 2px solid #1890ff;
 }

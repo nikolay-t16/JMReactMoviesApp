@@ -33,7 +33,6 @@
 
 .CardComponent__article-content-header-reit {
   font-size: 12px;
-  border: 2px solid #e9d100;
   border-radius: 17px;
   display: flex;
   align-items: center;
@@ -43,6 +42,22 @@
   position: relative;
   right: -15px;
   top: 2px;
+}
+
+.CardComponent__article-content-header-reit_reit-low {
+  border: 2px solid #e90000;
+}
+
+.CardComponent__article-content-header-reit_reit-mid {
+  border: 2px solid #e97e00;
+}
+
+.CardComponent__article-content-header-reit_reit-high {
+  border: 2px solid #e97e00;
+}
+
+.CardComponent__article-content-header-reit_reit-epic {
+  border: 2px solid #66e900;
 }
 
 .CardComponent__article-content-date {
@@ -74,4 +89,9 @@
 .CardComponent__article-content-text {
   font-size: 12px;
   line-height: 22px;
+  height: 132px;
+}
+
+.ant-rate-star:not(:last-child) {
+  margin-right: 3px;
 }
