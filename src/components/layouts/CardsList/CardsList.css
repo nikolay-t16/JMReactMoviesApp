@@ -3,3 +3,10 @@
   flex-wrap: wrap;
   justify-content: space-between;
 }
+@media only screen and (max-width: 1010px) {
+  .CardsList {
+    flex-direction: column;
+    align-items: center;
+    justify-content: unset;
+  }
+}

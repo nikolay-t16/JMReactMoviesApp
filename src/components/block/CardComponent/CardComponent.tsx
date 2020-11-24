@@ -65,7 +65,7 @@ class CardComponent extends React.Component<CardComponentProps, CardComponentSta
       for (let i = 0; i < genresCount; i++) {
         const genre = genres[i];
         genresNode.push(
-          <div key={genre.id} className="CardComponent__article-content-tags-item" title={genre.name}>
+          <div key={genre.id} className="CardComponent__article-tags-item" title={genre.name}>
             {subStringWithWords(genre.name, 12)}
           </div>,
         );
@@ -83,28 +83,28 @@ class CardComponent extends React.Component<CardComponentProps, CardComponentSta
       <Card className="CardComponent" bodyStyle={bodyStyle}>
         <article className="CardComponent__article">
           {imgTag}
-          <div className="CardComponent__article-content">
-            <div className="CardComponent__article-content-header">
-              <h2 className="CardComponent__article-content-header-title" title={data.title}>
+          <div className="CardComponent__article-header">
+            <div className="CardComponent__article-header-title">
+              <h2 className="CardComponent__article-header-title-name" title={data.title}>
                 {subStringWithWords(data.title, 16)}
               </h2>
               <div
-                className={classNames('CardComponent__article-content-header-reit', {
-                  'CardComponent__article-content-header-reit_reit-low': data.vote_average < 3,
-                  'CardComponent__article-content-header-reit_reit-mid':
-                    data.vote_average >= 3 && data.vote_average < 5,
-                  'CardComponent__article-content-header-reit_reit-high':
-                    data.vote_average >= 5 && data.vote_average < 7,
-                  'CardComponent__article-content-header-reit_reit-epic': data.vote_average >= 7,
+                className={classNames('CardComponent__article-header-title-reit', {
+                  'CardComponent__article-header-reit_reit-low': data.vote_average < 3,
+                  'CardComponent__article-header-reit_reit-mid': data.vote_average >= 3 && data.vote_average < 5,
+                  'CardComponent__article-header-reit_reit-high': data.vote_average >= 5 && data.vote_average < 7,
+                  'CardComponent__article-header-reit_reit-epic': data.vote_average >= 7,
                 })}
               >
                 {data.vote_average}
               </div>
             </div>
+            <div className="CardComponent__article-date">{getFormatDate()}</div>
+            {genresNode.length ? <div className="CardComponent__article-tags">{genresNode}</div> : null}
+          </div>
 
-            <div className="CardComponent__article-content-date">{getFormatDate()}</div>
-            {genresNode.length ? <div className="CardComponent__article-content-tags">{genresNode}</div> : null}
-            <div className="CardComponent__article-content-text">{subStringWithWords(data.overview, 200)}</div>
+          <div className="CardComponent__article-text">{subStringWithWords(data.overview, 200)}</div>
+          <div className="CardComponent__article-vote">
             <Rate onChange={(value) => this.onChangeRate(value)} value={rate} count={10} />
           </div>
         </article>
