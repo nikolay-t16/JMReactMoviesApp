@@ -133,7 +133,7 @@ class TabComponent extends React.Component<TabComponentProps, TabComponentState>
       await this.setState({ isFetching: false });
       this.setState({ items: res.results, totalPages: res.total_pages });
     } catch (error) {
-      this.setState({ fetchingError: 'ERROR!!!', isFetching: false });
+      this.setState({ fetchingError: `Error: ${error.message}`, isFetching: false });
       // eslint-disable-next-line no-console
       console.log(error);
     }

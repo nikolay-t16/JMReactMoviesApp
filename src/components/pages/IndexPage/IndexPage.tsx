@@ -45,7 +45,7 @@ class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({ fetchingError: 'ERROR!!!' });
+    this.setState({ fetchingError: `Error: ${error.message}` });
     // eslint-disable-next-line no-console
     console.log(error, errorInfo);
   }
