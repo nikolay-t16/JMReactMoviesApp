@@ -85,9 +85,6 @@ class CardComponent extends React.Component<CardComponentProps, CardComponentSta
           {imgTag}
           <div className="CardComponent__article-header">
             <div className="CardComponent__article-header-title">
-              <h2 className="CardComponent__article-header-title-name" title={data.title}>
-                {subStringWithWords(data.title, 16)}
-              </h2>
               <div
                 className={classNames('CardComponent__article-header-title-reit', {
                   'CardComponent__article-header-reit_reit-low': data.vote_average < 3,
@@ -98,12 +95,15 @@ class CardComponent extends React.Component<CardComponentProps, CardComponentSta
               >
                 {data.vote_average}
               </div>
+              <h2 className="CardComponent__article-header-title-name" title={data.title}>
+                {subStringWithWords(data.title, 36)}
+              </h2>
             </div>
             <div className="CardComponent__article-date">{getFormatDate()}</div>
             {genresNode.length ? <div className="CardComponent__article-tags">{genresNode}</div> : null}
           </div>
 
-          <div className="CardComponent__article-text">{subStringWithWords(data.overview, 200)}</div>
+          <div className="CardComponent__article-text">{subStringWithWords(data.overview, 170)}</div>
           <div className="CardComponent__article-vote">
             <Rate onChange={(value) => this.onChangeRate(value)} value={rate} count={10} />
           </div>

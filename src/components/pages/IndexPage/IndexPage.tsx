@@ -1,10 +1,9 @@
 import React, { ErrorInfo } from 'react';
-import { Alert } from 'antd';
+import { Alert, Tabs } from 'antd';
 import './IndexPage.css';
 
 import theMovieDB from '../../../helpers/TheMovieDB';
 import GenreData from '../../block/CardComponent/GenreData';
-import HeaderComponent from '../../layouts/HeaderComponent/HeaderComponent';
 import SearchTab from '../../layouts/SearchTab/SearchTab';
 import RatedTab from '../../layouts/RatedTab/RatedTab';
 import { IndexPageContextProvider } from './IndexPageContext';
@@ -13,7 +12,7 @@ export type IndexPageState = {
   fetchingError: string;
   guestSession: string;
   genres: GenreData[];
-  tab: string;
+  needUpdateRatedMovies: boolean;
 };
 export type IndexPageProps = {};
 
@@ -27,9 +26,8 @@ class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
   public state: IndexPageState = {
     fetchingError: '',
     guestSession: '',
-    tab: this.TAB_SEARCH,
-    // eslint-disable-next-line react/no-unused-state
     genres: [],
+    needUpdateRatedMovies: false,
   };
 
   public async componentDidMount() {
@@ -40,7 +38,7 @@ class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
         genres: response[1].genres,
       });
     } catch (error) {
-      this.setState({ fetchingError: 'ERROR!!!' });
+      this.setState({ fetchingError: `Error: ${error.message}` });
       // eslint-disable-next-line no-console
       console.log(error);
     }
@@ -52,30 +50,37 @@ class IndexPage extends React.Component<IndexPageProps, IndexPageState> {
     console.log(error, errorInfo);
   }
 
-  protected onChangeTab(tab: string) {
-    this.setState({ tab });
-  }
-
   protected get content(): JSX.Element {
-    const { fetchingError, tab, guestSession } = this.state;
+    const { fetchingError, genres, guestSession, needUpdateRatedMovies } = this.state;
     if (fetchingError) {
       return <Alert message={fetchingError} type="error" />;
     }
-    if (tab === this.TAB_RATED) {
-      return <RatedTab guestSession={guestSession} />;
-    }
-    return <SearchTab guestSession={guestSession} />;
+    const { TabPane } = Tabs;
+    return (
+      <IndexPageContextProvider genres={genres} guestSession={guestSession}>
+        <>
+          <Tabs defaultActiveKey="1" onChange={this.onChangeTab}>
+            <TabPane tab="Search" key={this.TAB_SEARCH}>
+              <SearchTab guestSession={guestSession} />
+            </TabPane>
+            <TabPane tab="Rated" key={this.TAB_RATED}>
+              <RatedTab needUpdateMovies={needUpdateRatedMovies} guestSession={guestSession} />
+            </TabPane>
+          </Tabs>
+        </>
+      </IndexPageContextProvider>
+    );
   }
 
+  protected onChangeTab = (tab: string) => {
+    this.setState({ needUpdateRatedMovies: tab === this.TAB_RATED });
+  };
+
   public render() {
-    const { tab, genres, guestSession } = this.state;
     return (
       <div className="IndexPage">
         <div className="IndexPage__content">
-          <HeaderComponent tab={tab} tabs={this.tabs} onChangeTab={(tabName) => this.onChangeTab(tabName)} />
-          <IndexPageContextProvider genres={genres} guestSession={guestSession}>
-            {this.content}
-          </IndexPageContextProvider>
+          {this.content}
           <div style={{ clear: 'both' }} />
         </div>
       </div>

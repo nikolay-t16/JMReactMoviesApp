@@ -35,6 +35,9 @@ class TheMovieDB {
       page,
       query: search,
     };
+    if (search === '') {
+      return { results: [], total_results: 0 };
+    }
     return this.fetch(this.API_SEARCH_MOVIE_PATH, params);
   }
 
@@ -69,10 +72,16 @@ class TheMovieDB {
       params.body = JSON.stringify(postParams);
       params.headers = { 'Content-Type': 'application/json;charset=utf-8' };
     }
-    const response = await fetch(apiPath, params);
-    if (response.ok) {
-      return response.json();
+    let response: Response;
+    try {
+      response = await fetch(apiPath, params);
+      if (response.ok) {
+        return response.json();
+      }
+    } catch (error) {
+      throw new Error('connection error');
     }
+
     throw new Error(`Ошибка HTTP: ${response.status}`);
   }
 }

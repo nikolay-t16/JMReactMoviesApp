@@ -21,11 +21,13 @@ export type TabComponentProps = {
   guestSession: string;
   showSearch: boolean;
   fetchMovies: (params: any) => Promise<any>;
+  needUpdateMovies: boolean;
 };
 
 class TabComponent extends React.Component<TabComponentProps, TabComponentState> {
   public static defaultProps = {
     showSearch: false,
+    needUpdateMovies: true,
   };
 
   public state: TabComponentState;
@@ -49,8 +51,23 @@ class TabComponent extends React.Component<TabComponentProps, TabComponentState>
 
   public async componentDidMount() {
     const { search, page } = this.state;
-    const { guestSession } = this.props;
-    await this.fetchMovies({ search, page, sessionId: guestSession });
+    const { guestSession, needUpdateMovies } = this.props;
+    if (needUpdateMovies) {
+      await this.fetchMovies({ search, page, sessionId: guestSession });
+    }
+  }
+
+  public async componentDidUpdate(prevProps: Readonly<TabComponentProps>) {
+    const { needUpdateMovies: prevNeedUpdateMovies } = prevProps;
+    if (prevNeedUpdateMovies) {
+      return;
+    }
+
+    const { search, page } = this.state;
+    const { guestSession, needUpdateMovies } = this.props;
+    if (needUpdateMovies) {
+      await this.fetchMovies({ search, page, sessionId: guestSession });
+    }
   }
 
   public onSearch(search: string) {
@@ -67,7 +84,7 @@ class TabComponent extends React.Component<TabComponentProps, TabComponentState>
   }
 
   protected get content(): JSX.Element {
-    const { items, isFetching, fetchingError, page, totalPages } = this.state;
+    const { items, isFetching, fetchingError } = this.state;
     const { guestSession } = this.props;
     if (fetchingError) {
       return <Alert message={fetchingError} type="error" />;
@@ -82,18 +99,29 @@ class TabComponent extends React.Component<TabComponentProps, TabComponentState>
     return (
       <>
         <CardsList guestSession={guestSession} items={items} />
-        <div className="TabComponent__content-pagination">
-          <Pagination
-            className="TabComponent__content-pagination"
-            size="small"
-            current={page}
-            defaultCurrent={page}
-            total={totalPages}
-            showSizeChanger={false}
-            onChange={(pageNumber: number) => this.onPageChange(pageNumber)}
-          />
-        </div>
+        {this.paginationNode}
       </>
+    );
+  }
+
+  protected get paginationNode() {
+    const { page, totalPages } = this.state;
+    if (totalPages < 2) {
+      return null;
+    }
+    return (
+      <div className="TabComponent__content-pagination">
+        {totalPages}
+        <Pagination
+          className="TabComponent__content-pagination"
+          size="small"
+          current={page}
+          defaultCurrent={page}
+          total={totalPages}
+          showSizeChanger={false}
+          onChange={(pageNumber: number) => this.onPageChange(pageNumber)}
+        />
+      </div>
     );
   }
 
@@ -103,7 +131,7 @@ class TabComponent extends React.Component<TabComponentProps, TabComponentState>
       await this.setState({ isFetching: true, fetchingError: '' });
       const res = await fetchMovies(params);
       await this.setState({ isFetching: false });
-      this.setState({ items: res.results, totalPages: res.total_results });
+      this.setState({ items: res.results, totalPages: res.total_pages });
     } catch (error) {
       this.setState({ fetchingError: 'ERROR!!!', isFetching: false });
       // eslint-disable-next-line no-console

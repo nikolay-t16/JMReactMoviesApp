@@ -1,15 +1,14 @@
 .CardComponent {
   max-width: 454px;
-  width: 100%
-;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 35px;
 }
 
 .CardComponent__article {
   display: grid;
   grid-template-columns: 183px 1fr;
-  grid-template-rows: 101px 132px 46px;
+  min-height: 278px;
 }
 
 .CardComponent__article-img {
@@ -27,8 +26,6 @@
   margin-right: 21px;
 }
 .CardComponent__article-header-title {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 4px;
 }
 .CardComponent__article-header-title-name {
@@ -43,9 +40,9 @@
   width: 34px;
   height: 34px;
   justify-content: center;
-  position: relative;
-  right: -15px;
-  top: 2px;
+  margin-top: 2px;
+  margin-right: -12px;
+  float: right;
 }
 
 .CardComponent__article-header-reit_reit-low {
@@ -100,6 +97,8 @@
 .CardComponent__article-vote {
   margin-left: 21px;
   margin-right: 6px;
+  display: flex;
+  align-items: flex-end;
 }
 
 .ant-rate-star:not(:last-child) {
@@ -119,7 +118,7 @@
   .CardComponent__article {
     display: grid;
     grid-template-columns: 60px 1fr;
-    grid-template-rows: 91px  max-content 50px
+    grid-template-rows: 115px max-content;
   }
 
   .CardComponent__article-img {
@@ -145,5 +144,4 @@
     display: flex;
     padding-top: 8px;
   }
-
 }
