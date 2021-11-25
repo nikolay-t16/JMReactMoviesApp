@@ -71,6 +71,6 @@
     ]
   },
   "devDependencies": {
-    "eslint-import-resolver-webpack": "^0.13.0"
+    "eslint-import-resolver-webpack": "0.13.2"
   }
 }
